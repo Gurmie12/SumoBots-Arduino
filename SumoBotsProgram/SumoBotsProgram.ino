@@ -2,7 +2,8 @@
  * DATE: NOV.19 - NOV.24
  * PURPOSE: Create an autonomous sumo bot that is able to defend,
  * attack and move on its own, responding to different 
- * sensory feedback from its enviroment.
+ * sensory feedback from its enviroment. Created to compete at the Sumo
+ * Bots advanced robotics competition at McMaster university
  */
 
 
@@ -36,10 +37,26 @@ void whiteAvoidance()
 {
   readRGB();
 
+  //Reading for white color pattern and performing avoidance
   if(red > 8 && red < 18 && grn > 9 && grn < 19 && blue > 8 && blue < 16)
   {
-    //TO DO:
-    //CODE FOR COLOR AVOIDANCE TO STAY IN THE RING
+    //TODO: CODE FOR MOVEMENT
+  }
+}
+
+void trackMovement(int motorMode)
+{
+  if (motorMode == 0)
+  {
+    
+  }
+  else if (motorMode == 1)
+  {
+    
+  }
+  else if (motorMode == 2)
+  {
+    
   }
 }
 
