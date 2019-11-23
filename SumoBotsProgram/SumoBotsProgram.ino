@@ -17,11 +17,12 @@
 * Create function for PIR sensor 
 */
 
-#define s0 4
-#define s1 5
-#define s2 6
-#define s3 7
-#define outPin 8
+// Colour Sensor
+//#define s0 0
+//#define s1 1
+#define s2 0
+#define s3 1
+#define outPin 2
 
 // Motor A
  
@@ -35,11 +36,17 @@ int enB = 3;
 int in3 = 5;
 int in4 = 4;
 
-// Motor Speed Values - Start at zero
- 
-int MotorSpeed1 = 0;
-int MotorSpeed2 = 0;
+//UltraSonic Sensor - FRONT - 
 
+int trigPinF = 10;
+int echoPinF = 11;
+
+//UltraSonic Sensor - RIGHT - 
+
+int trigPinR = 12;
+int echoPinR = 13;
+
+//Colour Values for Colour Sensor
 int red;
 int blue;
 int grn;
@@ -48,66 +55,6 @@ String color = "";
 float avgRed = 0;
 float avgGreen = 0;
 float avgBlue = 0;
-
-
-void whiteAvoidance()
-{
-  readRGB();
-
-  //Reading for white color pattern and performing avoidance
-  if(red > 8 && red < 18 && grn > 9 && grn < 19 && blue > 8 && blue < 16)
-  {
-    //TODO: CODE FOR MOVEMENT
-  }
-}
-
-void trackMovement(int motorMode)
-{
-  if (motorMode == 0) //Forward
-  {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-
-  analogWrite(enA, 20);
-  analogWrite(enB, 20);
-  }
-  else if (motorMode == 1) //Left or Right
-  {
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-
-  analogWrite(enA, 20);
-  analogWrite(enB, 20);
-  }
-  else if (motorMode == 2)//Left or Right
-  {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-
-  analogWrite(enA, 20);
-  analogWrite(enB, 20);
-  }
-  else if (motorMode == 3) //Reverse
-  {
-  
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-
-  analogWrite(enA, 20);
-  analogWrite(enB, 20);
-  }
-}
 
 //Function that reads the RGB components of the color by taking an average to reduce error
 void readRGB()
@@ -142,10 +89,85 @@ void readRGB()
   blue = blue / iter;
 }
 
-void objectDetection()
+//Function that finds a white line directly under the robot and does tasks accordingly
+void whiteAvoidance()
 {
+  readRGB();
 
+  //Reading for white color pattern and performing avoidance
+  if(red > 8 && red < 18 && grn > 9 && grn < 19 && blue > 8 && blue < 16)
+  {
+    //TODO: CODE FOR MOVEMENT
+  }
+}
+
+//Basic track movement, foward, pivoting, and reverse
+void trackMovement(int motorMode, int scale)
+{
+  if (motorMode == 0) //Forward
+  {
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
   
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+
+  analogWrite(enA, 10 * scale);
+  analogWrite(enB, 10 * scale);
+  }
+  else if (motorMode == 1) //Left or Right
+  {
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+
+  analogWrite(enA, 10 * scale);
+  analogWrite(enB, 10 * scale);
+  }
+  else if (motorMode == 2)//Left or Right
+  {
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+
+  analogWrite(enA, 10 * scale);
+  analogWrite(enB, 10 * scale);
+  }
+  else if (motorMode == 3) //Reverse
+  {
+  
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+
+  analogWrite(enA, 10 * scale);
+  analogWrite(enB, 10 * scale);
+  }
+}
+
+public int objectDetection(int trig, int echo)
+{
+ //Declaring pins for UltraSonic Sensor 
+ digitalWrite(trig, LOW); 
+ delayMicroseconds(2); 
+ digitalWrite(trig, HIGH); 
+ delayMicroseconds(10); 
+ digitalWrite(trig, LOW);
+
+ duration = pulseIn(echo, HIGH);
+
+ //Using a formula, finding the distance of the object
+ distance = (duration*.0343)/2;
+
+ if (distance )
+ Serial.print("Distance: ");  
+ Serial.println(distance); 
+ delay(50); 
 }
 
 void attacking()
@@ -153,24 +175,20 @@ void attacking()
   
 }
 
-void leftPivot()
-{
-  
-}
-
-void rightPivot()
-{
-  
-}
 
 void setup() 
 {
-  pinMode(s0, OUTPUT);
-  pinMode(s1, OUTPUT);
+  //Colour Sensor pin declaration
+  //pinMode(s0, OUTPUT);
+  //pinMode(s1, OUTPUT);
   pinMode(s2, OUTPUT);
   pinMode(s3, OUTPUT);
   pinMode(outPin, INPUT);
 
+  //Initializing the frequency scaling to 100% for more accuracte color detection.
+  //digitalWrite(s0,HIGH);
+  //digitalWrite(s1, HIGH);
+  
   //Motor pin declaration
   pinMode(enA, OUTPUT);
   pinMode(enB, OUTPUT);
@@ -178,19 +196,18 @@ void setup()
   pinMode(in2, OUTPUT);
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
-  
-  //Initializing the frequency scaling to 100% for more accuracte color detection.
-  digitalWrite(s0,HIGH);
-  digitalWrite(s1, HIGH);
 
+  //Ultra-Sonic pin declaration
+  pinMode(trigPinF, OUTPUT); 
+  pinMode(echoPinF, INPUT); 
+
+  pinMode(trigPinR, OUTPUT); 
+  pinMode(echoPinR, INPUT); 
 }
 
 
 void loop()
 {
   whiteAvoidance();
-
-  analogWrite(enA,200);
-  analogWrite(enB,200);
-  delay(10000);
+  
 }
