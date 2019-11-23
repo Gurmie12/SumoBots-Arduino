@@ -246,5 +246,11 @@ void setup()
 
 void loop()
 {
+  whiteAvoidance();
+  delay(200);
+  attacking();
+  delay(20000);
+  whiteAvoidance();
+  delay(200);
   
 }
