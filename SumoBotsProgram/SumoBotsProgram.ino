@@ -177,11 +177,39 @@ int objectDetection(int trig, int echo)
  else return 0;
  }
 
+//Method used to control attacking of other sumo bots, takes no paramater 
 void attacking()
 {
+
+  //Checks if both ultra sonic sensors are not detecting an object then spin
    while(objectDetection(trigPinF, echoPinF) == 0 && objectDetection(trigPinR, echoPinR) == 0)
    {
-     motion(2, 5);
+      motion(2, 5);
+   }
+
+  //If the object is detected on the front facing ultra sonic sensor then we want to drive at it (full speed)
+  //only while its still being detected
+   if(objectDectection(trigPinF, echoPinF) == 1)
+   {
+      while(objectDetection(trigPinF, echoPinF) == 1)
+      {
+         motion(0, 25);
+      }
+   } 
+
+   //In the case that only the right ultra sonic is detected we want to spin towards the right side while the front pin does not detect motion
+   else if(objetDetection(trigPinR, echoPinR) == 1)
+   {
+      while(objectDetection(trigPinF, echoPinF) != 1)
+      {
+          motion(2,5);
+      }
+
+      //If the front ultra sonic sensor detects the object after re-orienting, then drive full speed forward
+      if(objectDetection(trigPinF, echoPinF) == 1)
+      {
+          motion(0, 25)
+      }
    }
 }
 
@@ -218,5 +246,5 @@ void setup()
 
 void loop()
 {
-   whiteAvoidance();
+  
 }
