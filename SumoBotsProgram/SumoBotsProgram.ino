@@ -7,7 +7,6 @@
  */
 
 
-
 /*TO DO:
 * Create Function for left turn
 * Create a function for right turn
@@ -16,6 +15,7 @@
 * Create function for ultrasonic sensor (F,R,L)  
 * Create function for PIR sensor 
 */
+
 
 // Colour Sensor
 //#define s0 0
@@ -102,7 +102,7 @@ void whiteAvoidance()
 }
 
 //Basic track movement, foward, pivoting, and reverse
-void trackMovement(int motorMode, int scale)
+void motion(int motorMode, int scale)
 {
   if (motorMode == 0) //Forward
   {
@@ -150,7 +150,9 @@ void trackMovement(int motorMode, int scale)
   }
 }
 
-public int objectDetection(int trig, int echo)
+ //Object detection method that takes parameters of a tring and echo pin value and return weather an
+ //object is detected or not and returns an int.
+int objectDetection(int trig, int echo)
 {
  //Declaring pins for UltraSonic Sensor 
  digitalWrite(trig, LOW); 
@@ -159,20 +161,28 @@ public int objectDetection(int trig, int echo)
  delayMicroseconds(10); 
  digitalWrite(trig, LOW);
 
- duration = pulseIn(echo, HIGH);
+ float duration = pulseIn(echo, HIGH);
 
  //Using a formula, finding the distance of the object
- distance = (duration*.0343)/2;
+ float distance = (duration*.0343)/2;
 
- if (distance )
- Serial.print("Distance: ");  
- Serial.println(distance); 
+ //Varify that the distance is within the rings total diameter
+ if(distance <= 154.0 && distance > 0.0)
+ {
+ Serial.print("Distance: ");
+ Serial.println(distance);
  delay(50); 
-}
+ return 1;
+ }
+ else return 0;
+ }
 
 void attacking()
 {
-  
+   while(objectDetection(trigPinF, echoPinF) == 0 && objectDetection(trigPinR, echoPinR) == 0)
+   {
+     motion(2, 5);
+   }
 }
 
 
@@ -208,6 +218,5 @@ void setup()
 
 void loop()
 {
-  whiteAvoidance();
-  
+   whiteAvoidance();
 }
