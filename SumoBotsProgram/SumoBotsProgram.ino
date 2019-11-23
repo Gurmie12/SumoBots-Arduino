@@ -23,6 +23,23 @@
 #define s3 7
 #define outPin 8
 
+// Motor A
+ 
+int enA = 9;
+int in1 = 8;
+int in2 = 7;
+ 
+// Motor B
+ 
+int enB = 3;
+int in3 = 5;
+int in4 = 4;
+
+// Motor Speed Values - Start at zero
+ 
+int MotorSpeed1 = 0;
+int MotorSpeed2 = 0;
+
 int red;
 int blue;
 int grn;
@@ -46,17 +63,49 @@ void whiteAvoidance()
 
 void trackMovement(int motorMode)
 {
-  if (motorMode == 0)
+  if (motorMode == 0) //Forward
   {
-    
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+
+  analogWrite(enA, 20);
+  analogWrite(enB, 20);
   }
-  else if (motorMode == 1)
+  else if (motorMode == 1) //Left or Right
   {
-    
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+
+  analogWrite(enA, 20);
+  analogWrite(enB, 20);
   }
-  else if (motorMode == 2)
+  else if (motorMode == 2)//Left or Right
   {
-    
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+
+  analogWrite(enA, 20);
+  analogWrite(enB, 20);
+  }
+  else if (motorMode == 3) //Reverse
+  {
+  
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+
+  analogWrite(enA, 20);
+  analogWrite(enB, 20);
   }
 }
 
@@ -93,6 +142,26 @@ void readRGB()
   blue = blue / iter;
 }
 
+void objectDetection()
+{
+
+  
+}
+
+void attacking()
+{
+  
+}
+
+void leftPivot()
+{
+  
+}
+
+void rightPivot()
+{
+  
+}
 
 void setup() 
 {
@@ -101,6 +170,14 @@ void setup()
   pinMode(s2, OUTPUT);
   pinMode(s3, OUTPUT);
   pinMode(outPin, INPUT);
+
+  //Motor pin declaration
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
   
   //Initializing the frequency scaling to 100% for more accuracte color detection.
   digitalWrite(s0,HIGH);
@@ -112,4 +189,8 @@ void setup()
 void loop()
 {
   whiteAvoidance();
+
+  analogWrite(enA,200);
+  analogWrite(enB,200);
+  delay(10000);
 }
