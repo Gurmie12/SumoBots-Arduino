@@ -97,8 +97,11 @@ void whiteAvoidance()
   //Reading for white color pattern and performing avoidance
   if(red > 8 && red < 18 && grn > 9 && grn < 19 && blue > 8 && blue < 16)
   {
-    //TODO: CODE FOR MOVEMENT
+    Serial.print(1);
   }
+  else{
+    Serial.print(2);
+    }
 }
 
 //Basic track movement, foward, pivoting, and reverse
@@ -115,7 +118,7 @@ void motion(int motorMode, int scale)
   analogWrite(enA, 10 * scale);
   analogWrite(enB, 10 * scale);
   }
-  else if (motorMode == 1) //Left or Right
+  else if (motorMode == 1) //Right
   {
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
@@ -125,7 +128,7 @@ void motion(int motorMode, int scale)
   analogWrite(enA, 10 * scale);
   analogWrite(enB, 10 * scale);
   }
-  else if (motorMode == 2)//Left or Right
+  else if (motorMode == 2)//Left
   {
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
@@ -180,7 +183,7 @@ int objectDetection(int trig, int echo)
 //Method used to control attacking of other sumo bots, takes no paramater 
 void attacking()
 {
-
+  
   //Checks if both ultra sonic sensors are not detecting an object then spin
    while(objectDetection(trigPinF, echoPinF) == 0 && objectDetection(trigPinR, echoPinR) == 0)
    {
@@ -189,7 +192,7 @@ void attacking()
 
   //If the object is detected on the front facing ultra sonic sensor then we want to drive at it (full speed)
   //only while its still being detected
-   if(objectDectection(trigPinF, echoPinF) == 1)
+   if(objectDetection(trigPinF, echoPinF) == 1)
    {
       while(objectDetection(trigPinF, echoPinF) == 1)
       {
@@ -198,7 +201,7 @@ void attacking()
    } 
 
    //In the case that only the right ultra sonic is detected we want to spin towards the right side while the front pin does not detect motion
-   else if(objetDetection(trigPinR, echoPinR) == 1)
+   else if(objectDetection(trigPinR, echoPinR) == 1)
    {
       while(objectDetection(trigPinF, echoPinF) != 1)
       {
@@ -208,7 +211,7 @@ void attacking()
       //If the front ultra sonic sensor detects the object after re-orienting, then drive full speed forward
       if(objectDetection(trigPinF, echoPinF) == 1)
       {
-          motion(0, 25)
+          motion(0, 25);
       }
    }
 }
@@ -240,17 +243,32 @@ void setup()
   pinMode(echoPinF, INPUT); 
 
   pinMode(trigPinR, OUTPUT); 
-  pinMode(echoPinR, INPUT); 
+  pinMode(echoPinR, INPUT);
+
+  Serial.begin(9600);
 }
 
 
 void loop()
 {
-  whiteAvoidance();
-  delay(200);
-  attacking();
-  delay(20000);
-  whiteAvoidance();
-  delay(200);
+  //TESTING COLOUR DETECTION//
+
+  motion(0,10);
+  delay(3000);
+  motion(1,8);
+  delay(3000);
+  motion(2,8);
+  delay(3000);
+  motion(3,10);
+  delay(3000);
+  //whiteAvoidance();
+  //delay(200);
+  //motion(0,10);
+  //delay(200);
   
+  //attacking();
+  //delay(20000);
+  //whiteAvoidance();
+  //delay(200);
+
 }
