@@ -22,7 +22,7 @@
 //#define s1 1
 #define s2 0
 #define s3 1
-#define outPin 2
+#define outPin 2 
 
 // Motor A
  
@@ -97,11 +97,16 @@ void whiteAvoidance()
   //Reading for white color pattern and performing avoidance
   if(red > 8 && red < 18 && grn > 9 && grn < 19 && blue > 8 && blue < 16)
   {
-    Serial.print(1);
+    //WHITE AVOIDANCE COMMANDS
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);
+  motion(3, 10);
+  delay(1000);
+  motion(2, 6);
+  delay(1500);
   }
-  else{
-    Serial.print(2);
-    }
 }
 
 //Basic track movement, foward, pivoting, and reverse
@@ -172,9 +177,6 @@ int objectDetection(int trig, int echo)
  //Varify that the distance is within the rings total diameter
  if(distance <= 154.0 && distance > 0.0)
  {
- Serial.print("Distance: ");
- Serial.println(distance);
- delay(50); 
  return 1;
  }
  else return 0;
@@ -183,11 +185,11 @@ int objectDetection(int trig, int echo)
 //Method used to control attacking of other sumo bots, takes no paramater 
 void attacking()
 {
-  
   //Checks if both ultra sonic sensors are not detecting an object then spin
    while(objectDetection(trigPinF, echoPinF) == 0 && objectDetection(trigPinR, echoPinR) == 0)
    {
       motion(2, 5);
+      whiteAvoidance();
    }
 
   //If the object is detected on the front facing ultra sonic sensor then we want to drive at it (full speed)
@@ -206,6 +208,7 @@ void attacking()
       while(objectDetection(trigPinF, echoPinF) != 1)
       {
           motion(2,5);
+          whiteAvoidance();
       }
 
       //If the front ultra sonic sensor detects the object after re-orienting, then drive full speed forward
@@ -251,24 +254,8 @@ void setup()
 
 void loop()
 {
-  //TESTING COLOUR DETECTION//
-
-  motion(0,10);
-  delay(3000);
-  motion(1,8);
-  delay(3000);
-  motion(2,8);
-  delay(3000);
-  motion(3,10);
-  delay(3000);
-  //whiteAvoidance();
-  //delay(200);
-  //motion(0,10);
-  //delay(200);
-  
+  motion(0, 25);
+  delay(1000);  
   //attacking();
-  //delay(20000);
-  //whiteAvoidance();
-  //delay(200);
-
+  //delay(15000);
 }
